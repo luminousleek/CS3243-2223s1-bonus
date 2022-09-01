@@ -6,8 +6,7 @@ graph = {
 }
 
 def hstar(node):
-    # TODO Implement this, can just hardcode here.
-    raise NotImplementedError
+    return {'S':9, 'A':3, 'B':2, 'G':0}[node]
 def h1(node):
     return 0
 def h2(node):
@@ -19,8 +18,7 @@ def h4(node):
 def h5(node):
     return {'S':8, 'A':4, 'B':2, 'G':0}[node]
 def h_q5d(node):
-    # TODO Implement this
-    raise NotImplementedError
+    return max(h3(node), h5(node))
 
 def admissible_constraint(h_val, hstar_val, **kwargs):
     return h_val <= hstar_val
@@ -55,8 +53,19 @@ def astar_search(graph, h, goal_test, explored_order):
     frontier = PriorityQueue('min', f)
     frontier.append(node)
     explored = set()
-    # TODO Implement this
-    raise NotImplementedError
+    while frontier:
+      node = frontier.pop()
+      explored_order.append(node)
+      explored.add(node)
+      if node == 'G':
+        return
+
+      for next, cost in graph[node]:
+        if next not in explored:
+          cost_fn_g[next] = cost_fn_g[node] + cost
+          frontier.append(next)
+
+      
 
 print("A*STAR - Order of the nodes that are explored.")
 explored_order = []
