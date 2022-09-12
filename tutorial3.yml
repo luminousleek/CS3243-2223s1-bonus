@@ -1,0 +1,17 @@
+name: tutorial3
+channels:
+  - pytorch
+dependencies:
+  - python=3.9.7
+  - pip
+  - pytorch::pytorch
+  - pytorch::torchvision
+  - pytorch::torchaudio
+  - pytorch::cpuonly
+  - pip:
+    - gym
+    - swig
+    - gym[box2d]
+    - gym[atari]
+    - gym[accept-rom-license]
+    - matplotlib
