@@ -16,6 +16,12 @@ inital_state_3a = [
     [7,6,5]
 ]
 
+inital_state_3b = [
+    [2,3,None],
+    [1,7,4],
+    [8,6,5]
+]
+
 goal_state = [
     [1,2,3],
     [8,None,4],
@@ -39,9 +45,12 @@ print_state(inital_state_3a, "inital_state_3a")
 print_state(goal_state, "goal_state")
 
 def f(s):
-    # TODO Implement the compute for mismatched tiles
-    raise NotImplementedError
     mismatched_tiles = 0
+    for y, x in coord_grid:
+        if s[y][x] == None:
+          continue
+        if s[y][x] != goal_state[y][x]:
+          mismatched_tiles += 1
     return mismatched_tiles
 
 # Returns the coordinate of the empty piece
@@ -64,12 +73,16 @@ transition_coord_fns = [
 def transition_fn(s):
     successor_states = []
     empty_coord = find_empty_coord(s)
+    old_x, old_y = empty_coord
     for transition_coord_fn in transition_coord_fns:
         successor_empty_coord = transition_coord_fn(*empty_coord)
         if all([ 0<=c and c<=2  for c in successor_empty_coord]):
             successor_s = copy.deepcopy(s)
-            # TODO Implement the actual mutation
-            raise NotImplementedError
+            new_x, new_y = successor_empty_coord
+            # replace old blank square with new value
+            successor_s[old_y][old_x] = s[new_y][new_x]
+            # replace old value square with blank square
+            successor_s[new_y][new_x] = None
             successor_states.append(successor_s)
         else:
             successor_states.append(None)
@@ -100,11 +113,21 @@ LEFT, f=3
 
 # Now we solve 3a using code
 def hill_climbing(inital_state):
-    # TODO Implement
-    raise NotImplementedError
     curr = inital_state
-    return curr
+    print_state(curr, f"initial state, f={f(curr)}")
+    while True:
+      successors = transition_fn(curr)
+      states_costs = [(state, f(state)) for state in successors if state is not None]
+      next = min(states_costs, key=lambda tup: tup[1])[0]
+      if f(curr) < f(next): return curr
+      if f(next) == 0: return next
+      curr = next
+      print_state(curr, f"intermediate state, f={f(curr)}")
 
 print("========== Hill Climbing 3a ==========")
 minima_state = hill_climbing(inital_state_3a)
 print_state(minima_state, f"minima_state 3a, f={f(minima_state)}")
+
+print("========== Hill Climbing 3b ==========")
+minima_state = hill_climbing(inital_state_3b)
+print_state(minima_state, f"minima_state 3b, f={f(minima_state)}")
