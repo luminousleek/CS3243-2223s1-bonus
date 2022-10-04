@@ -114,15 +114,15 @@ LEFT, f=3
 # Now we solve 3a using code
 def hill_climbing(inital_state):
     curr = inital_state
-    print_state(curr, f"initial state, f={f(curr)}")
+    # print_state(curr, f"initial state, f={f(curr)}")
     while True:
       successors = transition_fn(curr)
       states_costs = [(state, f(state)) for state in successors if state is not None]
       next = min(states_costs, key=lambda tup: tup[1])[0]
-      if f(curr) < f(next): return curr
       if f(next) == 0: return next
+      if f(curr) < f(next): return curr
       curr = next
-      print_state(curr, f"intermediate state, f={f(curr)}")
+      # print_state(curr, f"intermediate state, f={f(curr)}")
 
 print("========== Hill Climbing 3a ==========")
 minima_state = hill_climbing(inital_state_3a)

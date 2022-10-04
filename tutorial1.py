@@ -95,7 +95,7 @@ def bfs_early_tree(graph, goal_test, start='S'):
     frontier = [start]
     while frontier:
         node = frontier.pop(0)
-        for nde in sorted(graph[node]):
+        for nde in sorted(graph[node]): 
           if goal_test(nde):
             return nde
           frontier.append(nde)
