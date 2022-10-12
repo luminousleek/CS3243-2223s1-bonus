@@ -32,41 +32,50 @@ u2.set_children([v3, v4, Node(10, True)])
 s = Node('s', False)
 s.set_children([u1, u2])
 
+def reverse_children(nde: Node):
+  if nde.is_term:
+    return
+
+  nde.children.reverse()
+  for child in nde.children:
+    reverse_children(child)
+
 def max_value(node: Node, alpha, beta):
   if node.is_term:
     return node.value, None
-  v = -1000
+  max_eval = -1000
   move = None
   for child in node.children:
-    v_new, a_new = min_value(child, alpha, beta)
-    print(f'max value, curr: {node.value}, child: {child.value}, v_new: {v_new}, alpha: {alpha}, beta: {beta}')
-    if v_new > v:
-      v, move = v_new, child
-      alpha = max(alpha, v)
-    if v >= beta:
-      print(f'max pruned, curr: {node.value}, child: {child.value}, move: {move.value}')
-      return v, move
-    print(f'max value, curr: {node.value}, child: {child.value}, alpha: {alpha}, beta: {beta}')
-  return v, move
+    eval, a_new = min_value(child, alpha, beta)
+    # print(f'max value, curr: {node.value}, child: {child.value}, v_new: {v_new}, alpha: {alpha}, beta: {beta}')
+    if eval > max_eval:
+      max_eval, move = eval, child
+      alpha = max(alpha, max_eval)
+    if max_eval >= beta:
+      print(f'max pruned, curr: {node.value}, pruned branches: {[nde.value for nde in node.children[node.children.index(child) + 1:]]}')
+      return max_eval, move
+    # print(f'max value, curr: {node.value}, child: {child.value}, alpha: {alpha}, beta: {beta}')
+  return max_eval, move
 
 def min_value(node: Node, alpha, beta):
   if node.is_term:
     return node.value, None
-  v = 1000
+  min_eval = 1000
   for child in node.children:
-    v_new, a_new = max_value(child, alpha, beta)
-    print(f'min value, curr: {node.value}, child: {child.value}, v_new: {v_new}, alpha: {alpha}, beta: {beta}')
-    if v_new < v:
-      v, move = v_new, child
-      beta = min(beta, v)
-    if v <= alpha:
-      print(f'min pruned, curr: {node.value}, child: {child.value}, move: {move.value}')
-      return v, move
-    print(f'min value, curr: {node.value}, child: {child.value}, alpha: {alpha}, beta: {beta}')
-  return v, move
+    eval, a_new = max_value(child, alpha, beta)
+    # print(f'min value, curr: {node.value}, child: {child.value}, v_new: {v_new}, alpha: {alpha}, beta: {beta}')
+    if eval < min_eval:
+      min_eval, move = eval, child
+      beta = min(beta, min_eval)
+    if min_eval <= alpha:
+      print(f'min pruned, curr: {node.value}, pruned branches: {[nde.value for nde in node.children[node.children.index(child) + 1:]]}')
+      return min_eval, move
+    # print(f'min value, curr: {node.value}, child: {child.value}, alpha: {alpha}, beta: {beta}')
+  return min_eval, move
 
 def ab_search(node: Node):
   value, move = max_value(node, -1000, 1000)
   return move
 
+reverse_children(s)
 print(ab_search(s).value)
